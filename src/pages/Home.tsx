@@ -22,7 +22,6 @@ import { RoutePath } from '../types';
 import { registerFormSubmission } from '../utils/googleSheets';
 import DeferredRender from '../components/DeferredRender';
 
-const InteractiveGlobe = lazy(() => import('../components/InteractiveGlobe'));
 const DashboardPreview = lazy(() => import('../components/DashboardPreview'));
 
 interface HomeProps {
@@ -189,11 +188,16 @@ export default function Home({ setPath, darkMode }: HomeProps) {
               </div>
             </div>
 
-            {/* Right side 3D AI Globe */}
+            {/* Right side featured image */}
             <div className="relative">
-              <Suspense fallback={<div className="aspect-square w-full max-w-md rounded-full bg-primary/5 animate-pulse" />}>
-                <InteractiveGlobe darkMode={darkMode} />
-              </Suspense>
+              <div className={`overflow-hidden rounded-3xl border shadow-2xl ${darkMode ? 'border-white/10 bg-[#071d35]' : 'border-primary/10 bg-slate-50'}`}>
+                <img
+                  src="/seo/feature-home.svg"
+                  alt="Natton Digital AI-powered operations platform"
+                  className="w-full aspect-[1.9/1] object-cover"
+                  loading="eager"
+                />
+              </div>
             </div>
           </div>
         </div>

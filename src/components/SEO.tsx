@@ -88,6 +88,7 @@ export default function SEO({ title, description, image, noIndex = false, route 
     if (image) {
       const imageUrl = image.startsWith('http') ? image : `${CANONICAL_ORIGIN}${image.startsWith('/') ? '' : '/'}${image}`;
       updateMetaTag('meta[property="og:image"]', 'property', 'og:image', imageUrl);
+      updateMetaTag('meta[property="og:image:alt"]', 'property', 'og:image:alt', `${title} featured image`);
     }
 
     // 5. Update Twitter Card tags
@@ -97,6 +98,7 @@ export default function SEO({ title, description, image, noIndex = false, route 
     if (image) {
       const imageUrl = image.startsWith('http') ? image : `${CANONICAL_ORIGIN}${image.startsWith('/') ? '' : '/'}${image}`;
       updateMetaTag('meta[name="twitter:image"]', 'name', 'twitter:image', imageUrl);
+      updateMetaTag('meta[name="twitter:image:alt"]', 'name', 'twitter:image:alt', `${title} featured image`);
     }
   }, [title, description, image, noIndex, route]);
 
