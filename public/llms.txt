@@ -1,0 +1,29 @@
+# Natton Digital
+
+AI growth, marketing, automation, CRM, and conversational AI solutions.
+
+## Main Pages
+- Home: https://nattondigital.com/
+- About: https://nattondigital.com/about
+- Solutions: https://nattondigital.com/solutions/ai-growth-marketing
+- Products: https://nattondigital.com/products/growth-os
+- Industries: https://nattondigital.com/industries/healthcare
+- Pricing: https://nattondigital.com/pricing
+- Contact: https://nattondigital.com/contact
+- Book a Demo: https://nattondigital.com/book-demo
+
+## Solutions
+- AI Marketing: https://nattondigital.com/solutions/ai-marketing-saas
+- CRM Automation: https://nattondigital.com/solutions/crm-ai-automation
+- Conversational AI: https://nattondigital.com/solutions/conversational-ai
+- WhatsApp Automation: https://nattondigital.com/solutions/whatsapp-automation
+- AI Calling Agents: https://nattondigital.com/solutions/ai-calling-agents
+- AI Agents: https://nattondigital.com/solutions/ai-agents
+
+## Resources
+- Blog: https://nattondigital.com/blog
+- Guides: https://nattondigital.com/guides
+- Free Tools: https://nattondigital.com/free-tools
+- AI Readiness Assessment: https://nattondigital.com/ai-readiness-assessment
+- ROI Calculator: https://nattondigital.com/roi-calculator
+- Sitemap: https://nattondigital.com/sitemap.xml
