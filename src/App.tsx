@@ -817,6 +817,18 @@ export default function App() {
         {!notFound && path !== 'home' && !ROUTES_WITH_PAGE_BREADCRUMBS.has(path) && (
           <Breadcrumbs path={path} setPath={setPath} darkMode={darkMode} />
         )}
+        {!notFound && path !== 'home' && path !== 'admin' && (
+          <section className={`px-4 sm:px-6 lg:px-8 pt-6 ${ROUTES_WITH_PAGE_BREADCRUMBS.has(path) ? 'pb-2' : 'pb-6'}`} aria-label={`${currentSEO.title} featured image`}>
+            <div className="max-w-7xl mx-auto overflow-hidden rounded-2xl border border-primary/15 bg-[#071d35] shadow-xl">
+              <img
+                src={currentSEO.image}
+                alt={`${currentSEO.title} featured image`}
+                className="w-full aspect-[1200/360] object-cover"
+                loading="eager"
+              />
+            </div>
+          </section>
+        )}
         <Suspense fallback={<div className="min-h-[50vh] flex items-center justify-center text-xs font-mono text-gray-500">Loading page...</div>}>
           {renderContent()}
         </Suspense>
