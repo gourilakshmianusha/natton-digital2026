@@ -1,4 +1,5 @@
 import express from 'express';
+import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -7,6 +8,7 @@ const app = express();
 const port = Number(process.env.PORT || 4173);
 const distDirectory = path.join(__dirname, 'dist');
 const indexFile = path.join(distDirectory, 'index.html');
+const siteOrigin = 'https://nattondigital.com';
 
 const validRoutes = new Set([
   '/',
@@ -62,7 +64,11 @@ app.get('*', (request, response) => {
   const requestPath = request.path.replace(/\/+$/, '') || '/';
 
   if (validRoutes.has(requestPath)) {
-    return response.status(200).sendFile(indexFile);
+    const routeSlug = requestPath === '/' ? 'home' : requestPath.slice(1).replace(/\//g, '-');
+    const imageUrl = `${siteOrigin}/seo/feature-${routeSlug}.png`;
+    const html = fs.readFileSync(indexFile, 'utf8')
+      .replaceAll(`${siteOrigin}/seo/feature-home.png`, imageUrl);
+    return response.status(200).type('html').send(html);
   }
 
   return response.status(404).sendFile(indexFile);

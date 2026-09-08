@@ -256,20 +256,7 @@ const SEO_METADATA: Record<string, { title: string; description: string; image: 
 };
 
 const getFeatureImage = (route: string): string => {
-  if (route === 'home') return '/seo/feature-home.svg';
-  if (route === 'contact' || route === 'book-demo') return '/seo/feature-contact.svg';
-  if (route.includes('ai-growth-marketing')) return '/seo/feature-marketing.svg';
-  if (route.includes('conversational-ai')) return '/seo/feature-conversation.svg';
-  if (route.includes('ai-calling-agents')) return '/seo/feature-voice.svg';
-  if (route.startsWith('products/')) return '/seo/feature-products.svg';
-  if (route.startsWith('industries/')) return '/seo/feature-industries.svg';
-  if (route === 'blog' || route === 'guides' || route === 'resources' || route === 'free-tools' || route === 'webinars' || route === 'ai-readiness-assessment' || route === 'roi-calculator') {
-    return '/seo/feature-resources.svg';
-  }
-  if (route === 'about' || route === 'why-natton-digital' || route === 'our-process' || route === 'careers' || route === 'case-studies' || route === 'privacy-policy' || route === 'terms-of-platform') {
-    return '/seo/feature-company.svg';
-  }
-  return '/seo/feature-automation.svg';
+  return `/seo/feature-${route.replace(/\//g, '-')}.png`;
 };
 
 const ROUTES_WITH_PAGE_BREADCRUMBS = new Set<string>([
