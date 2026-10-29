@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Sun, Moon, Menu, X, ChevronDown, ArrowRight, Activity, Command, Layers } from 'lucide-react';
+import { createPortal } from 'react-dom';
+import { Search, Menu, X, ChevronDown, ArrowRight, Activity, Command, Layers } from 'lucide-react';
 import Logo from './Logo';
 import { RoutePath } from '../types';
+import { agencyServices, getServiceSlug, services } from '../data/services';
+import { products, solutions } from '../data/navigation';
 
 interface HeaderProps {
   currentPath: RoutePath;
   setPath: (path: RoutePath) => void;
   darkMode: boolean;
-  setDarkMode: (val: boolean) => void;
 }
 
-export default function Header({ currentPath, setPath, darkMode, setDarkMode }: HeaderProps) {
+export default function Header({ currentPath, setPath, darkMode }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState<'solutions' | 'products' | 'industries' | 'tools' | 'about' | null>(null);
+  const [activeDropdown, setActiveDropdown] = useState<'services' | 'solutions' | 'products' | 'industries' | 'tools' | 'about' | null>(null);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -28,30 +30,13 @@ export default function Header({ currentPath, setPath, darkMode, setDarkMode }: 
       if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
         e.preventDefault();
         setSearchOpen((prev) => !prev);
+      } else if (e.key === 'Escape') {
+        setSearchOpen(false);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
-
-  const solutions = [
-    { name: 'AI Growth Marketing', path: 'solutions/ai-growth-marketing' as RoutePath, desc: 'SEO, AEO, Meta/Google Ads, and dynamic pipeline growth.' },
-    { name: 'AI Marketing SaaS', path: 'solutions/ai-marketing-saas' as RoutePath, desc: 'AI content studio, automated SEO assistance, campaign scorer.' },
-    { name: 'CRM & AI Automation SaaS', path: 'solutions/crm-ai-automation' as RoutePath, desc: 'GrowthOS CRM pipeline with instant WhatsApp automation.' },
-    { name: 'Conversational AI Hub', path: 'solutions/conversational-ai' as RoutePath, desc: 'AI Calling agents, cloud telephony, and automated chats.' },
-    { name: 'WhatsApp Automation', path: 'solutions/whatsapp-automation' as RoutePath, desc: 'WhatsApp Business API, broadcasts, and automated chatbots.' },
-    { name: 'AI Calling Agents', path: 'solutions/ai-calling-agents' as RoutePath, desc: 'Inbound & outbound Voice AI automation, simulated voice demos.' },
-    { name: 'Cloud Telephony Platform', path: 'solutions/cloud-telephony' as RoutePath, desc: 'IVR, call routing, recording, analytics, and CRM integration.' },
-    { name: 'RCS Messaging Platform', path: 'solutions/rcs-messaging' as RoutePath, desc: 'Rich communication services, carousels, action buttons, and commerce.' },
-    { name: 'AI Agents & Automation', path: 'solutions/ai-agents' as RoutePath, desc: 'Autonomous n8n workflows, Sales agents, Support agents.' },
-  ];
-
-  const products = [
-    { name: 'GrowthOS™', path: 'products/growth-os' as RoutePath, desc: 'All-in-one organic and paid acquisition orchestration suite.' },
-    { name: 'AI Marketing Platform', path: 'products/ai-marketing-platform' as RoutePath, desc: 'Generative copywriting, automated graphics, dynamic campaigns.' },
-    { name: 'BusinessOS™', path: 'products/business-os' as RoutePath, desc: 'Operational automation engine integrating legacy pipelines.' },
-    { name: 'AgenticOS™', path: 'products/agentic-os' as RoutePath, desc: 'Orchestration framework for multiple concurrent AI agents.' },
-  ];
 
   const industries = [
     { name: 'Healthcare Industry', path: 'industries/healthcare' as RoutePath, desc: 'Patient onboarding, HIPAA AI triages, automated reminders.' },
@@ -64,18 +49,19 @@ export default function Header({ currentPath, setPath, darkMode, setDarkMode }: 
 
   const tools = [
     { name: 'Free Growth Tools', path: 'free-tools' as RoutePath, desc: 'Free AI, SEO, CRM & ROI calculators to evaluate opportunities and accelerate growth.' },
-    { name: 'Careers at Natton', path: 'careers' as RoutePath, desc: 'Join our team and help shape the future of AI and digital transformation.' },
-    { name: 'Webinars & Workshops', path: 'webinars' as RoutePath, desc: 'Register for upcoming live events, watch bootcamp recordings, and download templates.' },
-    { name: 'Guides & Playbooks', path: 'guides' as RoutePath, desc: 'Explore ultimate AI transformation playbooks, SOPs, and step-by-step guides.' },
     { name: 'AI Readiness Assessment', path: 'ai-readiness-assessment' as RoutePath, desc: 'Take a 6-step diagnostic audit to generate an AI strategy score.' },
     { name: 'ROI & Automation Calculator', path: 'roi-calculator' as RoutePath, desc: 'Calculate exact cash and time savings with GrowthOS.' },
-    { name: 'Case Studies Grid', path: 'case-studies' as RoutePath, desc: 'Explore verifiable ROI case studies of cross-industry scaling.' },
-    { name: 'Tech Blog & Insights', path: 'blog' as RoutePath, desc: 'Latest tactics on AI, CRM, WhatsApp, and n8n orchestration.' },
-    { name: 'Pricing & Plans', path: 'pricing' as RoutePath, desc: 'Transparent billing packages for AI Marketing, CRM, and AgenticOS.' },
+    { name: 'Blogs', path: 'blog' as RoutePath, desc: 'Latest tactics on AI, CRM, WhatsApp, and n8n orchestration.' },
   ];
 
   const searchablePages = [
     { name: 'Homepage Growth Center', path: 'home' as RoutePath, category: 'Main' },
+    { name: 'Services Overview', path: 'services' as RoutePath, category: 'Services' },
+    ...services.map(service => ({
+      name: service.name,
+      path: `services/${getServiceSlug(service)}` as RoutePath,
+      category: 'Services'
+    })),
     ...solutions.map(s => ({ name: s.name, path: s.path, category: 'Solutions' })),
     ...products.map(p => ({ name: p.name, path: p.path, category: 'Products' })),
     ...industries.map(i => ({ name: i.name, path: i.path, category: 'Industries' })),
@@ -84,11 +70,11 @@ export default function Header({ currentPath, setPath, darkMode, setDarkMode }: 
     { name: 'Contact & Booking', path: 'contact' as RoutePath, category: 'Company' }
   ];
 
-  const filteredSearchResults = searchQuery === ''
+  const filteredSearchResults = searchQuery.trim() === ''
     ? searchablePages.slice(0, 5)
-    : searchablePages.filter(p => p.name.toLowerCase().includes(searchQuery.toLowerCase()) || p.category.toLowerCase().includes(searchQuery.toLowerCase())).slice(0, 6);
+    : searchablePages.filter(p => p.name.toLowerCase().includes(searchQuery.trim().toLowerCase()) || p.category.toLowerCase().includes(searchQuery.trim().toLowerCase())).slice(0, 6);
 
-  const toggleDropdown = (name: 'solutions' | 'products' | 'industries' | 'tools' | 'about') => {
+  const toggleDropdown = (name: 'services' | 'solutions' | 'products' | 'industries' | 'tools' | 'about') => {
     setActiveDropdown((prev) => (prev === name ? null : name));
   };
 
@@ -99,7 +85,7 @@ export default function Header({ currentPath, setPath, darkMode, setDarkMode }: 
       {/* Global Banner alert */}
       <div className="bg-gradient-to-r from-[#2E9CAE] via-[#47C7BF] to-[#99D57C] text-white text-[11px] font-medium text-center py-1.5 px-4 tracking-wider uppercase select-none flex items-center justify-center gap-2">
         <span className="bg-white/20 px-1.5 py-0.5 rounded font-mono text-[9px]">Live Announcement</span>
-        <span>Empowering MSMEs in India & SMBs worldwide with autonomous AI Operations.</span>
+        <span>Book Your Digital Business Strategy</span>
         <button onClick={() => setPath('ai-readiness-assessment')} className="underline font-bold hover:opacity-80 transition-all ml-1">
           Take AI Assessment →
         </button>
@@ -113,13 +99,67 @@ export default function Header({ currentPath, setPath, darkMode, setDarkMode }: 
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex flex-1 items-center justify-center gap-6">
+          <nav className="hidden min-w-0 flex-1 items-center justify-center gap-2 lg:flex 2xl:gap-4">
+            <div className="relative">
+              <button
+                type="button"
+                aria-expanded={activeDropdown === 'services'}
+                aria-controls="services-dropdown"
+                onMouseEnter={() => setActiveDropdown('services')}
+                onClick={() => setActiveDropdown('services')}
+                className={`flex shrink-0 items-center gap-1 whitespace-nowrap rounded text-xs font-medium transition-colors py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary 2xl:text-sm ${
+                  activeDropdown === 'services' || currentPath.startsWith('services')
+                    ? 'text-primary font-semibold'
+                    : (darkMode ? 'text-gray-300 hover:text-white' : 'text-gray-600 hover:text-gray-900')
+                }`}
+              >
+                Services
+                <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-200 ${activeDropdown === 'services' ? 'rotate-180' : ''}`} />
+              </button>
+
+              {activeDropdown === 'services' && (
+                <div
+                  id="services-dropdown"
+                  onMouseLeave={() => setActiveDropdown(null)}
+                  className={`absolute left-1/2 mt-1 grid max-h-[70vh] w-[min(620px,90vw)] -translate-x-1/2 grid-cols-2 gap-1 overflow-y-auto rounded-xl border p-3 shadow-xl animate-fade-in ${
+                    darkMode ? 'bg-dark/95 border-white/[0.1] text-white' : 'bg-white border-gray-100 text-[#110B33]'
+                  }`}
+                >
+                  <button
+                    onClick={() => {
+                      setPath('services');
+                      setActiveDropdown(null);
+                    }}
+                    className={`col-span-2 rounded-lg px-3 py-2 text-left text-xs font-bold text-primary ${
+                      darkMode ? 'hover:bg-white/[0.04]' : 'hover:bg-gray-50'
+                    }`}
+                  >
+                    All Services
+                  </button>
+                  {agencyServices.map(service => (
+                    <button
+                      key={service.id}
+                      onClick={() => {
+                        setPath(`services/${getServiceSlug(service)}`);
+                        setActiveDropdown(null);
+                      }}
+                      className={`rounded-lg p-2.5 text-left text-xs font-semibold transition-colors ${
+                        darkMode ? 'hover:bg-white/[0.04]' : 'hover:bg-gray-50'
+                      }`}
+                    >
+                      {service.name}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
             {/* Solutions Dropdown */}
             <div className="relative">
               <button
                 onMouseEnter={() => setActiveDropdown('solutions')}
                 onClick={() => toggleDropdown('solutions')}
-                className={`flex items-center gap-1 text-sm font-medium transition-colors py-2 ${
+                className={`flex shrink-0 items-center gap-1 whitespace-nowrap text-xs font-medium transition-colors py-2 2xl:text-sm ${
                   activeDropdown === 'solutions' || currentPath.startsWith('solutions')
                     ? 'text-primary font-semibold'
                     : (darkMode ? 'text-gray-300 hover:text-white' : 'text-gray-600 hover:text-gray-900')
@@ -165,7 +205,7 @@ export default function Header({ currentPath, setPath, darkMode, setDarkMode }: 
               <button
                 onMouseEnter={() => setActiveDropdown('products')}
                 onClick={() => toggleDropdown('products')}
-                className={`flex items-center gap-1 text-sm font-medium transition-colors py-2 ${
+                className={`flex shrink-0 items-center gap-1 whitespace-nowrap text-xs font-medium transition-colors py-2 2xl:text-sm ${
                   activeDropdown === 'products' || currentPath.startsWith('products')
                     ? 'text-primary font-semibold'
                     : (darkMode ? 'text-gray-300 hover:text-white' : 'text-gray-600 hover:text-gray-900')
@@ -209,7 +249,7 @@ export default function Header({ currentPath, setPath, darkMode, setDarkMode }: 
               <button
                 onMouseEnter={() => setActiveDropdown('industries')}
                 onClick={() => toggleDropdown('industries')}
-                className={`flex items-center gap-1 text-sm font-medium transition-colors py-2 ${
+                className={`flex shrink-0 items-center gap-1 whitespace-nowrap text-xs font-medium transition-colors py-2 2xl:text-sm ${
                   activeDropdown === 'industries' || currentPath.startsWith('industries')
                     ? 'text-primary font-semibold'
                     : (darkMode ? 'text-gray-300 hover:text-white' : 'text-gray-600 hover:text-gray-900')
@@ -253,7 +293,7 @@ export default function Header({ currentPath, setPath, darkMode, setDarkMode }: 
               <button
                 onMouseEnter={() => setActiveDropdown('tools')}
                 onClick={() => toggleDropdown('tools')}
-                className={`flex items-center gap-1 text-sm font-medium transition-colors py-2 ${
+                className={`flex shrink-0 items-center gap-1 whitespace-nowrap text-xs font-medium transition-colors py-2 2xl:text-sm ${
                   activeDropdown === 'tools' || currentPath === 'roi-calculator' || currentPath === 'ai-readiness-assessment'
                     ? 'text-primary font-semibold'
                     : (darkMode ? 'text-gray-300 hover:text-white' : 'text-gray-600 hover:text-gray-900')
@@ -297,7 +337,7 @@ export default function Header({ currentPath, setPath, darkMode, setDarkMode }: 
               <button
                 onMouseEnter={() => setActiveDropdown('about')}
                 onClick={() => toggleDropdown('about')}
-                className={`flex items-center gap-1 text-sm font-medium transition-colors py-2 ${
+                className={`flex shrink-0 items-center gap-1 whitespace-nowrap text-xs font-medium transition-colors py-2 2xl:text-sm ${
                   activeDropdown === 'about' || currentPath === 'about' || currentPath === 'why-natton-digital' || currentPath === 'our-process'
                     ? 'text-primary font-semibold'
                     : (darkMode ? 'text-gray-300 hover:text-white' : 'text-gray-600 hover:text-gray-900')
@@ -358,17 +398,6 @@ export default function Header({ currentPath, setPath, darkMode, setDarkMode }: 
             </div>
 
             <button
-              onClick={() => setPath('blog')}
-              className={`text-sm font-medium transition-colors ${
-                currentPath === 'blog'
-                  ? 'text-primary font-semibold'
-                  : (darkMode ? 'text-gray-300 hover:text-white' : 'text-gray-600 hover:text-gray-900')
-              }`}
-            >
-              Blog
-            </button>
-
-            <button
               onClick={() => setPath('contact')}
               className={`text-sm font-medium transition-colors ${
                 currentPath === 'contact'
@@ -380,7 +409,7 @@ export default function Header({ currentPath, setPath, darkMode, setDarkMode }: 
             </button>
           </nav>
 
-          {/* Search, Theme controls & CTAs */}
+          {/* Search & CTAs */}
           <div className="ml-auto flex shrink-0 items-center gap-3">
             {/* Search trigger button */}
             <button
@@ -407,19 +436,6 @@ export default function Header({ currentPath, setPath, darkMode, setDarkMode }: 
               }`}
             >
               <Search className="h-4 w-4" />
-            </button>
-
-            {/* Dark Mode toggle */}
-            <button
-              onClick={() => setDarkMode(!darkMode)}
-              className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border transition-colors ${
-                darkMode
-                  ? 'border-white/[0.08] bg-white/[0.02] text-yellow-400 hover:text-yellow-300'
-                  : 'border-gray-200 bg-gray-50 text-gray-600 hover:text-primary hover:border-primary/20'
-              }`}
-              title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-            >
-              {darkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </button>
 
             {/* Mobile Menu Toggle */}
@@ -451,15 +467,22 @@ export default function Header({ currentPath, setPath, darkMode, setDarkMode }: 
           darkMode ? 'bg-[#110B33] border-white/[0.08] text-white' : 'bg-white border-gray-100 text-[#110B33]'
         }`}>
           <div className="space-y-4 font-sans text-sm mt-2">
-            {/* Direct Blog Link for Mobile */}
-            <div className="pt-2 pb-1">
-              <button
-                onClick={() => setPath('blog')}
-                className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-blue-500/20 to-cyan-500/20 border border-[#00C2FF]/30 text-[#00C2FF] text-xs font-bold font-mono flex items-center justify-between"
-              >
-                <span>📚 TECH BLOG & INSIGHTS</span>
-                <span>→</span>
-              </button>
+            <div>
+              <p className="text-[10px] font-bold text-[#47C7BF] uppercase mb-1.5 tracking-wider">Services</p>
+              <div className="grid grid-cols-1 gap-1 pl-2">
+                <button onClick={() => setPath('services')} className="text-left py-1 text-xs text-gray-400 hover:text-primary transition-colors">
+                  ↳ All Services
+                </button>
+                {agencyServices.map(service => (
+                  <button
+                    key={service.id}
+                    onClick={() => setPath(`services/${getServiceSlug(service)}`)}
+                    className="text-left py-1 text-xs text-gray-400 hover:text-primary transition-colors"
+                  >
+                    ↳ {service.name}
+                  </button>
+                ))}
+              </div>
             </div>
 
             <div>
@@ -536,8 +559,8 @@ export default function Header({ currentPath, setPath, darkMode, setDarkMode }: 
       )}
 
       {/* Search Modal Backdrop & Panel (Global Search Command Center) */}
-      {searchOpen && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center pt-24 px-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+      {searchOpen && typeof document !== 'undefined' && createPortal(
+        <div className="fixed inset-x-0 bottom-0 top-[6.5rem] z-[60] flex items-start justify-center overflow-y-auto px-4 pt-4 bg-black/60 backdrop-blur-sm animate-fade-in max-sm:top-[8rem]">
           <div className={`w-full max-w-xl rounded-xl border shadow-2xl overflow-hidden animate-scale-up ${
             darkMode ? 'bg-[#110B33] border-white/10 text-white' : 'bg-white border-gray-200 text-[#110B33]'
           }`}>
@@ -548,7 +571,14 @@ export default function Header({ currentPath, setPath, darkMode, setDarkMode }: 
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search solutions, products, industries, tools..."
+                placeholder="Search services, solutions, products, industries, tools..."
+                onKeyDown={event => {
+                  if (event.key === 'Enter' && filteredSearchResults[0]) {
+                    setPath(filteredSearchResults[0].path);
+                    setSearchOpen(false);
+                    setSearchQuery('');
+                  }
+                }}
                 className="flex-1 bg-transparent border-none outline-none text-sm placeholder-gray-500 font-sans"
                 autoFocus
               />
@@ -607,7 +637,8 @@ export default function Header({ currentPath, setPath, darkMode, setDarkMode }: 
               </span>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </header>
   );

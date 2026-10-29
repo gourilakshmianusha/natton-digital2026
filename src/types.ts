@@ -1,5 +1,7 @@
 export type RoutePath =
   | 'home'
+  | 'services'
+  | `services/${string}`
   | 'compare'
   | 'free-tools'
   | 'careers'

@@ -5,7 +5,6 @@ import ProductGrowthOs from './ProductGrowthOs';
 import ProductAiMarketingPlatform from './ProductAiMarketingPlatform';
 import ProductBusinessOs from './ProductBusinessOs';
 import ProductAgenticOs from './ProductAgenticOs';
-import ServiceProductBridge from '../components/ServiceProductBridge';
 
 interface ProductsProps {
   subPath: string;
@@ -14,12 +13,7 @@ interface ProductsProps {
 }
 
 export default function Products({ subPath, setPath, darkMode }: ProductsProps) {
-  const renderProduct = (page: React.ReactNode) => (
-    <>
-      <ServiceProductBridge kind="product" route={subPath} setPath={setPath} darkMode={darkMode} />
-      {page}
-    </>
-  );
+  const renderProduct = (page: React.ReactNode) => page;
 
   if (subPath === 'growth-os' || subPath === 'growthos') {
     return renderProduct(<ProductGrowthOs setPath={setPath} darkMode={darkMode} />);

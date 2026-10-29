@@ -812,7 +812,7 @@ export default function CaseStudies({ setPath, darkMode }: { setPath: (path: Rou
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-left">
             {[
-              { title: 'AI Marketing', desc: 'Custom conversion funnels driving leads.', path: 'solutions/ai-growth-marketing' as RoutePath },
+              { title: 'AI Marketing', desc: 'Custom conversion funnels driving leads.', path: 'services/ai-growth-marketing' as RoutePath },
               { title: 'GrowthOS™', desc: 'Secure sales CRM pipeline management.', path: 'products/growth-os' as RoutePath },
               { title: 'BusinessOS™', desc: 'Consolidated communications inbox.', path: 'products/business-os' as RoutePath },
               { title: 'AgenticOS™', desc: 'Autonomous custom voice & text agents.', path: 'products/agentic-os' as RoutePath },

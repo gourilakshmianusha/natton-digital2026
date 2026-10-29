@@ -24,7 +24,7 @@ const serviceToProduct: Record<string, { name: string; path: RoutePath }> = {
 const productToService: Record<string, { name: string; path: RoutePath }> = {
   'growth-os': { name: 'CRM & AI Automation', path: 'solutions/crm-ai-automation' },
   'growthos': { name: 'CRM & AI Automation', path: 'solutions/crm-ai-automation' },
-  'ai-marketing-platform': { name: 'AI Growth Marketing', path: 'solutions/ai-growth-marketing' },
+  'ai-marketing-platform': { name: 'AI Growth Marketing', path: 'services/ai-growth-marketing' },
   'business-os': { name: 'Conversational AI', path: 'solutions/conversational-ai' },
   'businessos': { name: 'Conversational AI', path: 'solutions/conversational-ai' },
   'agentic-os': { name: 'AI Agents', path: 'solutions/ai-agents' },

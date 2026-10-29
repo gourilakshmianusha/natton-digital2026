@@ -12,6 +12,7 @@ const siteOrigin = 'https://nattondigital.com';
 
 const validRoutes = new Set([
   '/',
+  '/services',
   '/compare',
   '/free-tools',
   '/careers',
@@ -33,7 +34,6 @@ const validRoutes = new Set([
   '/terms-of-platform',
   '/admin',
   '/admin',
-  '/solutions/ai-growth-marketing',
   '/solutions/ai-marketing-saas',
   '/solutions/crm-ai-automation',
   '/solutions/conversational-ai',
@@ -57,6 +57,11 @@ const validRoutes = new Set([
   '/industries/retail-ecommerce',
   '/industries/professional-services'
 ]);
+
+app.get('/solutions/ai-growth-marketing', (request, response) => {
+  const query = request.originalUrl.slice(request.path.length);
+  return response.redirect(301, `/services${query}`);
+});
 
 app.use(express.static(distDirectory, { extensions: false }));
 

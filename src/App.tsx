@@ -6,8 +6,11 @@ import FloatingCTA from './components/FloatingCTA';
 import SEO from './components/SEO';
 import Breadcrumbs from './components/Breadcrumbs';
 import { Sparkles, CheckCircle, ShieldCheck, Cpu } from 'lucide-react';
+import { serviceDetailPaths, services, getServiceSlug } from './data/services';
 
 const Home = lazy(() => import('./pages/Home'));
+const ServicesOverview = lazy(() => import('./pages/ServicesOverview'));
+const ServiceDetail = lazy(() => import('./pages/ServiceDetail'));
 const Solutions = lazy(() => import('./pages/Solutions'));
 const Products = lazy(() => import('./pages/Products'));
 const Industries = lazy(() => import('./pages/Industries'));
@@ -37,11 +40,19 @@ const SEO_METADATA: Record<string, { title: string; description: string; image: 
     description: 'Deploy custom-trained AI Agents, automated CRM pipelines, WhatsApp Business bots, and programmatic SEO models for 10x growth with zero manual overhead.',
     image: '/logo-dark.png'
   },
-  'solutions/ai-growth-marketing': {
-    title: 'AI Growth Marketing Solutions | Natton Digital',
-    description: 'Automate organic & paid acquisition. Scale with programmatic SEO, AI-powered copywriting, dynamic graphics, and automatic newsletters.',
+  'services': {
+    title: 'Digital Marketing & AI Growth Services | Natton Digital',
+    description: 'Grow your business with website development, SEO, AEO, Google and Meta Ads, social media, content, email marketing, and conversion optimization.',
     image: '/logo-dark.png'
   },
+  ...Object.fromEntries(services.map(service => [
+    `services/${getServiceSlug(service)}`,
+    {
+      title: service.seo || `${service.name} | Natton Digital`,
+      description: service.meta || service.short,
+      image: '/logo-dark.png'
+    }
+  ])),
   'solutions/ai-marketing-saas': {
     title: 'AI Marketing SaaS & Automation Platform | Natton Digital',
     description: 'Supercharge content generation with our AI Content Studio, automated SEO audit tools, and intelligent campaign performance scorer.',
@@ -260,7 +271,7 @@ const getFeatureImage = (route: string): string => {
 };
 
 const ROUTES_WITH_PAGE_BREADCRUMBS = new Set<string>([
-  'solutions/ai-growth-marketing', 'solutions/ai-marketing-saas', 'solutions/crm-ai-automation',
+  'solutions/ai-marketing-saas', 'solutions/crm-ai-automation',
   'solutions/conversational-ai', 'solutions/whatsapp-automation', 'solutions/ai-agents',
   'solutions/ai-calling-agents', 'solutions/cloud-telephony', 'solutions/rcs-messaging',
   'products/growth-os', 'products/growthos', 'products/ai-marketing-platform',
@@ -269,13 +280,19 @@ const ROUTES_WITH_PAGE_BREADCRUMBS = new Set<string>([
   'industries/manufacturing', 'industries/retail', 'industries/retail-ecommerce',
   'industries/professional-services', 'case-studies', 'blog', 'ai-readiness-assessment',
   'roi-calculator', 'contact', 'about', 'why-natton-digital', 'our-process', 'book-demo',
-  'resources', 'integrations', 'solutions', 'products', 'industries', 'tools'
+  'resources', 'integrations', 'solutions', 'products', 'industries', 'tools', 'services',
+  ...serviceDetailPaths
 ]);
+
+function resolvePathname(pathname: string): string {
+  const route = pathname.replace(/^\/+|\/+$/g, '');
+  return route === 'solutions/ai-growth-marketing' ? 'services/ai-growth-marketing' : route;
+}
 
 function getInitialLocation(): { path: RoutePath; notFound: boolean } {
   if (typeof window === 'undefined') return { path: 'home', notFound: false };
 
-  const pathname = window.location.pathname.replace(/^\/+|\/+$/g, '');
+  const pathname = resolvePathname(window.location.pathname);
   const hash = window.location.hash;
   if (pathname === 'admin' || hash === '#/admin' || hash.endsWith('/admin')) {
     return { path: 'admin', notFound: false };
@@ -289,10 +306,7 @@ export default function App() {
   const initialLocation = getInitialLocation();
   const [path, setPath] = useState<RoutePath>(initialLocation.path);
   const [notFound, setNotFound] = useState(initialLocation.notFound);
-  const [darkMode, setDarkMode] = useState<boolean>(() => {
-    const savedTheme = window.localStorage.getItem('natton-theme');
-    return savedTheme ? savedTheme === 'dark' : true;
-  });
+  const darkMode = false;
   const [selectedBlogPostId, setSelectedBlogPostId] = useState<string | null>(null);
   const [activeBlogSEO, setActiveBlogSEO] = useState<{ title: string; description: string; image?: string } | null>(null);
 
@@ -303,24 +317,20 @@ export default function App() {
     }
   }, [path]);
 
-  // Sync dark mode class with document root
+  // Keep the site in light mode, including when a previously saved dark theme exists.
   useEffect(() => {
-    const root = window.document.documentElement;
-    if (darkMode) {
-      root.classList.add('dark');
-      window.localStorage.setItem('natton-theme', 'dark');
-    } else {
-      root.classList.remove('dark');
-      window.localStorage.setItem('natton-theme', 'light');
-    }
-  }, [darkMode]);
+    window.document.documentElement.classList.remove('dark');
+  }, []);
 
   // Sync physical URL typed by the user.
   useEffect(() => {
     const handleLocation = () => {
       const pathname = window.location.pathname;
       const hash = window.location.hash;
-      const potentialPath = pathname.replace(/^\/+|\/+$/g, '');
+      const potentialPath = resolvePathname(pathname);
+      if (pathname.replace(/\/+$/, '') === '/solutions/ai-growth-marketing') {
+        window.history.replaceState({}, '', `/services/ai-growth-marketing${window.location.search}${hash}`);
+      }
       if (potentialPath === 'admin' || hash === '#/admin' || hash.endsWith('/admin')) {
         setNotFound(false);
         setPath('admin');
@@ -663,6 +673,14 @@ export default function App() {
     if (path === 'home') {
       return <Home setPath={setPath} darkMode={darkMode} />;
     }
+
+    if (path === 'services') {
+      return <ServicesOverview setPath={setPath} darkMode={darkMode} />;
+    }
+
+    if (path.startsWith('services/')) {
+      return <ServiceDetail serviceSlug={path.slice('services/'.length)} setPath={setPath} darkMode={darkMode} />;
+    }
     
     if (path.startsWith('solutions/')) {
       const sub = path.substring(10) as any;
@@ -797,7 +815,7 @@ export default function App() {
       />
 
       {/* Header */}
-      <Header currentPath={path} setPath={setPath} darkMode={darkMode} setDarkMode={setDarkMode} />
+      <Header currentPath={path} setPath={setPath} darkMode={darkMode} />
 
       {/* Main Content Area */}
       <main className="site-main flex-grow">
@@ -810,7 +828,7 @@ export default function App() {
       </main>
 
       {/* Reusable floating tools / widgets */}
-      <FloatingCTA setPath={setPath} darkMode={darkMode} />
+      <FloatingCTA setPath={setPath} darkMode={darkMode} showStickyCTA={!path.startsWith('services/')} />
 
       {/* Footer */}
       <Footer setPath={setPath} darkMode={darkMode} />

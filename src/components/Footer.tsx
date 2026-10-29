@@ -11,7 +11,7 @@ interface FooterProps {
 export default function Footer({ setPath, darkMode }: FooterProps) {
   const navLinks = {
     solutions: [
-      { name: 'AI Growth Marketing', path: 'solutions/ai-growth-marketing' as RoutePath },
+      { name: 'AI Growth Marketing', path: 'services/ai-growth-marketing' as RoutePath },
       { name: 'AI Marketing SaaS', path: 'solutions/ai-marketing-saas' as RoutePath },
       { name: 'CRM & Automation', path: 'solutions/crm-ai-automation' as RoutePath },
       { name: 'Conversational AI', path: 'solutions/conversational-ai' as RoutePath },
@@ -37,17 +37,12 @@ export default function Footer({ setPath, darkMode }: FooterProps) {
     ],
     tools: [
       { name: 'Free Growth Tools', path: 'free-tools' as RoutePath },
-      { name: 'Careers at Natton', path: 'careers' as RoutePath },
-      { name: 'Webinars & Events', path: 'webinars' as RoutePath },
-      { name: 'Guides & Playbooks', path: 'guides' as RoutePath },
       { name: 'Compare Solutions', path: 'compare' as RoutePath },
       { name: 'AI Readiness Diagnostic', path: 'ai-readiness-assessment' as RoutePath },
       { name: 'ROI Growth Calculator', path: 'roi-calculator' as RoutePath },
       { name: 'Our 6-Step Process', path: 'our-process' as RoutePath },
-      { name: 'Case Studies Library', path: 'case-studies' as RoutePath },
-      { name: 'Tech Blog & Insights', path: 'blog' as RoutePath },
+      { name: 'Blogs', path: 'blog' as RoutePath },
       { name: 'Resources Hub', path: 'resources' as RoutePath },
-      { name: 'Pricing & Plans', path: 'pricing' as RoutePath },
     ]
   };
 

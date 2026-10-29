@@ -5,6 +5,7 @@ import { RoutePath } from '../types';
 interface FloatingCTAProps {
   setPath: (path: RoutePath) => void;
   darkMode: boolean;
+  showStickyCTA?: boolean;
 }
 
 interface Message {
@@ -13,7 +14,7 @@ interface Message {
   time: string;
 }
 
-export default function FloatingCTA({ setPath, darkMode }: FloatingCTAProps) {
+export default function FloatingCTA({ setPath, darkMode, showStickyCTA = true }: FloatingCTAProps) {
   const [chatOpen, setChatOpen] = useState(false);
   const [showSticky, setShowSticky] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
@@ -55,7 +56,7 @@ export default function FloatingCTA({ setPath, darkMode }: FloatingCTAProps) {
   return (
     <>
       {/* Sticky Bottom CTA Ribbon */}
-      {showSticky && (
+      {showSticky && showStickyCTA && (
         <div className={`fixed bottom-0 inset-x-0 z-40 p-4 border-t transition-all duration-500 transform translate-y-0 flex flex-col sm:flex-row items-center justify-between gap-4 backdrop-blur-lg ${
           darkMode 
             ? 'bg-[#081120]/90 border-white/[0.08] text-white shadow-[0_-10px_30px_rgba(0,0,0,0.5)]' 

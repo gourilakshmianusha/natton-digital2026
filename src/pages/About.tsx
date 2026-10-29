@@ -551,7 +551,7 @@ export default function About({ setPath, darkMode }: AboutProps) {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 max-w-7xl mx-auto">
             {[
-              { title: "AI Marketing", path: "solutions/ai-growth-marketing", desc: "Target high-intent audiences and dynamically structure visual ad creatives using LLMs.", tag: "REVENUE" },
+              { title: "AI Marketing", path: "services", desc: "Target high-intent audiences and dynamically structure visual ad creatives using LLMs.", tag: "REVENUE" },
               { title: "GrowthOS™", path: "products/growth-os", desc: "All-in-one cloud outbound prospecting software coupled with auto email warmup systems.", tag: "PLATFORM" },
               { title: "BusinessOS™", path: "products/business-os", desc: "Automate accounting, project milestones, and client communications inside a single UI.", tag: "ENTERPRISE" },
               { title: "AgenticOS™", path: "products/agentic-os", desc: "Deploy sovereign autonomous agents to self-execute complex multi-node CRM workflows.", tag: "COGNITIVE" },
